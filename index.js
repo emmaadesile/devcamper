@@ -1,23 +1,29 @@
-import express from "express";
 import dotenv from "dotenv";
+import express from "express";
 import morgan from "morgan";
 import colors from "colors";
 
-import bootcampRoutes from "./routes/bootcamps";
-import connectToDb from "./config/dbConnect";
-
 dotenv.config();
+
+import bootcampRoutes from "./routes/bootcamps";
+import dbConnection from "./config/db";
+
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-
-// db Connection
-connectToDb();
 
 // middleware
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+// db Connection
+dbConnection.connect((err) => {
+  if (err) {
+    console.error(`Connection Error: ${err.stack}`);
+    return;
+  }
+  console.log(`Connected as id: ${dbConnection.threadId}`);
+});
 
 // routes
 app.use("/api/v1/bootcamps", bootcampRoutes);
