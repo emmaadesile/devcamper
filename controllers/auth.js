@@ -46,8 +46,8 @@ const register = async (req, res, next) => {
 /**
  * @name login
  * @param {obj} req
- * @desc register a new user
- * @returns new user object
+ * @desc login a new user
+ * @returns token
  */
 const login = async (req, res, next) => {
   const { email, password } = req.body;
