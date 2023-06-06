@@ -1,5 +1,4 @@
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 
 import dbConnection from "../config/db";
 import { generateToken } from "../utils/token";
@@ -28,7 +27,7 @@ const register = async (req, res, next) => {
         throw Error(error);
       }
 
-      res.status(201).json({
+      return res.status(201).json({
         status: "success",
         message: "User created successfully",
         data: {
@@ -67,7 +66,7 @@ const login = async (req, res, next) => {
 
         if (!isPasswordMatching) {
           return res.status(401).json({
-            status: "failed",
+            status: "error",
             message: "Unauthorized request. Invalid login credentials",
           });
         }

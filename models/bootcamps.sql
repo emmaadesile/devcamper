@@ -7,7 +7,6 @@ CREATE TABLE bootcamps (
   address VARCHAR(255),
   careers JSON,
   housing INT,
-  jobAssistance INT,
   jobGuarantee INT,
   user_id INT,
   INDEX par_ind (user_id),
