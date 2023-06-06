@@ -11,7 +11,6 @@ const router = express.Router();
 
 // routes
 router.route("/").get(getBootCamps).post(createBootCamp);
-
 router.route("/:id").get(getBootCamp).put(editBootCamp).delete(deleteBootCamp);
 
-module.exports = router;
+export default router;

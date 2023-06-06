@@ -1,4 +1,5 @@
 const getBootCamps = (req, res, next) => {
+  console.log('REQUEST', req.body);
   res.status(200).json({
     success: true,
     message: "Show all bootcamps",
