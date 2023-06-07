@@ -1,5 +1,5 @@
-import mysql from "mysql";
-import dotenv from "dotenv";
+const mysql = require("mysql");
+const dotenv = require("dotenv");
 
 dotenv.config();
 
@@ -16,13 +16,10 @@ const connectionOptions = {
   },
 };
 
-let connect;
+let connect = connectionOptions.dev;
 
-if (process.env.NODE_ENV === "development") {
-  connect = connectionOptions.dev;
-}
 if (process.env.NODE_ENV === "production") {
   connect = connectionOptions.prod;
 }
 
-export default connect;
+module.exports = connect;

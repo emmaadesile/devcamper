@@ -6,8 +6,7 @@ var _morgan = _interopRequireDefault(require("morgan"));
 var _colors = _interopRequireDefault(require("colors"));
 var _bootcamps = _interopRequireDefault(require("./routes/bootcamps"));
 var _auth = _interopRequireDefault(require("./routes/auth"));
-var _dbConfig = _interopRequireDefault(require("./config/dbConfig"));
-var _initialize = require("./models/initialize");
+var _initialize = _interopRequireDefault(require("./models/initialize"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 _dotenv["default"].config();
 var app = (0, _express["default"])();
@@ -19,7 +18,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // initialize database
-(0, _initialize.initialize)();
+(0, _initialize["default"])();
 
 // body parser
 app.use(_express["default"].json());

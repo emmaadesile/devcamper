@@ -5,8 +5,7 @@ import colors from "colors";
 
 import bootcampRoutes from "./routes/bootcamps";
 import authRoutes from "./routes/auth";
-import dbConnect from "./config/dbConfig";
-import { initialize } from "./models/initialize";
+import initialize  from "./models/initialize";
 
 dotenv.config();
 
