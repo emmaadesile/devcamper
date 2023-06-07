@@ -1,4 +1,4 @@
-import dbConnection from "../config/db";
+import dbConnect from "../config/dbConfig";
 
 /**
  * @name getBootCamps
@@ -9,7 +9,7 @@ import dbConnection from "../config/db";
 const getBootCamps = (req, res, next) => {
   try {
     const query = "SELECT * FROM bootcamps";
-    dbConnection.query(query, (error, results, fields) => {
+    dbConnect.query(query, (error, results) => {
       if (error) {
         console.log(error);
         res.status(400).json({
@@ -34,10 +34,10 @@ const getBootCamps = (req, res, next) => {
  * @desc get a bootcamp
  * @returns bootcamp
  */
-const getBootCamp = (req, res, next) => {
+const getBootCamp = (req, res) => {
   try {
     const query = "SELECT * FROM bootcamps WHERE id = ?";
-    dbConnection.query(query, req.params.id, (error, results) => {
+    dbConnect.query(query, req.params.id, (error, results) => {
       if (error) {
         return res.status(400).json({
           status: "error",
@@ -70,17 +70,9 @@ const getBootCamp = (req, res, next) => {
  * @desc creates a new bootcamp
  * @returns new bootcamp
  */
-const createBootCamp = (req, res, next) => {
-  const {
-    name,
-    description,
-    website,
-    email,
-    address,
-    careers,
-    housing,
-    jobGuarantee,
-  } = req.body;
+const createBootCamp = (req, res) => {
+  const { name, description, website, email, address, housing, jobGuarantee } =
+    req.body;
 
   try {
     const query = "INSERT INTO bootcamps SET ?";
@@ -90,12 +82,11 @@ const createBootCamp = (req, res, next) => {
       website,
       email,
       address,
-      careers,
       housing,
       jobGuarantee,
       user_id: req.userId,
     };
-    dbConnection.query(query, values, (error, results) => {
+    dbConnect.query(query, values, (error, results) => {
       if (error) {
         return res.status(400).json({
           status: "error",
@@ -123,13 +114,10 @@ const createBootCamp = (req, res, next) => {
  */
 const deleteBootCamp = (req, res, next) => {
   try {
-    const bootcampId = req.params.id;
     const userId = req.userId;
+    const query = "DELETE FROM bootcamps WHERE id = ? AND user_id = ?";
 
-    const deleteQuery = "DELETE FROM bootcamps WHERE id = ?";
-    const selectQuery = "SELECT * FROM bootcamps WHERE id = ? AND user_id = ?";
-
-    dbConnection.query(selectQuery, [bootcampId, userId], (error, results) => {
+    dbConnect.query(query, [req.params.id, req.userId], (error, results) => {
       if (error) {
         return res.status(400).json({
           status: "error",
@@ -137,25 +125,7 @@ const deleteBootCamp = (req, res, next) => {
         });
       }
 
-      const parsedResult = JSON.parse(JSON.stringify(results));
-
-      if (parsedResult?.length > 0 && parsedResult[0].user_id !== userId) {
-        return res.status(403).json({
-          status: "error",
-          message: "User has no rights to this resource",
-        });
-      }
-    });
-
-    dbConnection.query(deleteQuery, req.params.id, (error, results) => {
-      if (error) {
-        return res.status(400).json({
-          status: "error",
-          message: error.toString(),
-        });
-      }
-
-      if (results) {
+      if (results.length) {
         return res.status(202).json({
           status: "success",
           data: "Bootcamp deleted",
@@ -172,8 +142,59 @@ const deleteBootCamp = (req, res, next) => {
   }
 };
 
+const updateBootcamp = async (req, res) => {
+  const fields = Object.keys(req.body);
+  const fieldValues = Object.values(req.body);
+
+  let query = "";
+  fields.forEach((key, index) => {
+    if (index < fields.length - 1) {
+      query += `${key} = ?, `;
+    } else {
+      query += `${key} = ?`;
+    }
+  });
+
+  const id = req.params.id;
+  const userId = req.userId;
+
+  dbConnect.query(
+    `UPDATE bootcamps SET ${query} WHERE id = ? AND user_id = ?`,
+    [...fieldValues, id, userId],
+    (error, results) => {
+      try {
+        if (error) {
+          return res.status(400).json({
+            status: "error",
+            message: error.toString(),
+          });
+        }
+
+        const parsedResults = JSON.parse(JSON.stringify(results));
+
+        if (parsedResults.affectedRows === 0) {
+          return res.status(404).json({
+            status: "error",
+            message: "Bootcamp not found",
+          });
+        }
+
+        if (parsedResults.affectedRows > 0) {
+          return res.status(200).json({
+            status: "success",
+            message: "Bootcamp updated successfully",
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  );
+};
+
 export {
   getBootCamps,
+  updateBootcamp,
   getBootCamp,
   createBootCamp,
   deleteBootCamp,

@@ -40,7 +40,6 @@ export const verifyToken = (req, res, next) => {
 
   jwt.verify(token, secret, (err, decoded) => {
     if (err) {
-      console.log(err)
       return res.status(500).json({
         status: "error",
         message: err.toString(),

@@ -4,8 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production node index",
-    "dev": "nodemon --exec babel-node index"
+    "start": "NODE_ENV=production babel-node node dist/index",
+    "dev": "nodemon --exec babel-node src/index",
+    "migrate": "babel-node src/models/migrate",
+    "build": "babel src --out-dir dist"
   },
   "keywords": [],
   "author": "",
@@ -15,11 +17,13 @@
     "dotenv": "^16.1.0",
     "esm": "^3.2.25",
     "express": "^4.18.2",
+    "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.0",
     "mysql": "^2.18.1",
     "yup": "^1.2.0"
   },
   "devDependencies": {
+    "@babel/cli": "^7.21.5",
     "@babel/core": "^7.22.1",
     "@babel/node": "^7.22.1",
     "@babel/preset-env": "^7.22.4",

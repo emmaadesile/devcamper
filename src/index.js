@@ -5,25 +5,21 @@ import colors from "colors";
 
 import bootcampRoutes from "./routes/bootcamps";
 import authRoutes from "./routes/auth";
-import dbConnection from "./config/db";
+import dbConnect from "./config/dbConfig";
+import { initialize } from "./models/initialize";
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.PORT || 5001;
 
 // middleware
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
-// db Connection
-dbConnection.connect((err) => {
-  if (err) {
-    console.error(`Connection Error: ${err.stack}`);
-    return;
-  }
-  console.log(`Connected as id: ${dbConnection.threadId}`);
-});
+
+// initialize database
+initialize();
 
 // body parser
 app.use(express.json());

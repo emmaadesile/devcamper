@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 
-import dbConnection from "../config/db";
+import dbConnect from "../config/dbConfig";
 import { generateToken } from "../utils/token";
 
 /**
@@ -21,7 +21,7 @@ const register = async (req, res, next) => {
   };
 
   try {
-    dbConnection.query(query, newUser, (error, results, fields) => {
+    dbConnect.query(query, newUser, (error, results, fields) => {
       if (error) {
         console.log(error);
         throw Error(error);
@@ -53,7 +53,7 @@ const login = async (req, res, next) => {
 
   try {
     const query = "SELECT * FROM users WHERE email = ?";
-    dbConnection.query(query, email, (error, results, filed) => {
+    dbConnect.query(query, email, (error, results) => {
       if (error) {
         throw Error(error.toString());
       }
@@ -67,7 +67,7 @@ const login = async (req, res, next) => {
         if (!isPasswordMatching) {
           return res.status(401).json({
             status: "error",
-            message: "Unauthorized request. Invalid login credentials",
+            message: "Invalid login credentials",
           });
         }
 
@@ -78,6 +78,12 @@ const login = async (req, res, next) => {
           token,
         });
       }
+
+      // user does not exist
+      return res.status(401).json({
+        status: "error",
+        message: "Invalid login credentials",
+      });
     });
   } catch (error) {
     console.log(error);
