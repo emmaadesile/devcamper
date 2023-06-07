@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "NODE_ENV=production babel-node node dist/index",
+    "start": "NODE_ENV=production npm run build && node dist/index",
     "dev": "nodemon --exec babel-node src/index",
-    "migrate": "babel-node src/models/migrate",
-    "build": "babel src --out-dir dist"
+    "build": "rm -rf dist && babel src --out-dir dist && cp src/models/query.sql dist/models"
   },
   "keywords": [],
   "author": "",

@@ -27,6 +27,11 @@ app.use(express.json());
 // routes
 app.use("/api/v1/bootcamps", bootcampRoutes);
 app.use("/api/v1/auth", authRoutes);
+app.get("/", (req, res) => {
+  res
+    .status(200)
+    .json({ status: "success", message: "Welcome to devcamper API" });
+});
 
 const server = app.listen(PORT, () =>
   console.log(`Server is running on PORT - ${PORT}`.yellow.bold)

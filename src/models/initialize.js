@@ -1,20 +1,19 @@
 import fs from "fs";
 import path from "path";
-import dbConnect from "../config/dbConfig";
+import connect from "../config/dbConfig";
 
 export const initialize = () => {
   // Database Connection
-  dbConnect.connect((err) => {
+  connect.connect((err) => {
     if (err) {
       console.error(`Connection Error: ${err.stack}`);
       return;
     }
-    console.log(`Connected as id: ${dbConnect.threadId}`);
+    console.log(`Connected as id: ${connect.threadId}`);
   });
-  // dbConnect.query(`CREATE DATABASE IF NOT EXISTS ${process.env.DB_DATABASE}`);
-  const query = fs.readFileSync(path.join(__dirname, "./index.sql")).toString();
+  const query = fs.readFileSync(path.join(__dirname, "./query.sql")).toString();
 
-  dbConnect.query(query, (err, result) => {
+  connect.query(query, (err, result) => {
     if (err) {
       console.log(err);
       throw err;

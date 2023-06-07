@@ -81,7 +81,7 @@ var login = /*#__PURE__*/function () {
           _req$body2 = req.body, email = _req$body2.email, password = _req$body2.password;
           _context2.prev = 1;
           query = "SELECT * FROM users WHERE email = ?";
-          _dbConfig["default"].query(query, email, function (error, results, filed) {
+          _dbConfig["default"].query(query, email, function (error, results) {
             if (error) {
               throw Error(error.toString());
             }
@@ -92,7 +92,7 @@ var login = /*#__PURE__*/function () {
               if (!isPasswordMatching) {
                 return res.status(401).json({
                   status: "error",
-                  message: "Unauthorized request. Invalid login credentials"
+                  message: "Invalid login credentials"
                 });
               }
               var token = (0, _token.generateToken)({
@@ -103,6 +103,12 @@ var login = /*#__PURE__*/function () {
                 token: token
               });
             }
+
+            // user does not exist
+            return res.status(401).json({
+              status: "error",
+              message: "Invalid login credentials"
+            });
           });
           _context2.next = 10;
           break;

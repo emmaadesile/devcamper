@@ -1,4 +1,15 @@
-CREATE TABLE bootcamps (
+USE devcamper;
+
+-- users table
+CREATE TABLE IF NOT EXISTS users (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL,
+  password VARCHAR(255) NOT NULL
+);
+
+-- bootcamps table
+CREATE TABLE IF NOT EXISTS bootcamps (
   id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255),
   description VARCHAR(255),
@@ -15,3 +26,4 @@ CREATE TABLE bootcamps (
     ON UPDATE CASCADE
     ON DELETE CASCADE
 );
+;
